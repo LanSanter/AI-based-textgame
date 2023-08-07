@@ -52,7 +52,7 @@ function load_setting() {
       .then(data => {
         // 將新設定輸入變數中
         while(message1.length > 0){message1.shift();}
-        message1.splice(0,0,{role: 'system', content: `你扮演著一個反饋系統，透過以下設定集:${data}。生成對應場景，並詳盡地描寫。你只會反映玩家任何行為導致的現實後果，而不會回覆任何之外的內容與提醒。任何脫離系統身分的發言都將被懲罰。`});
+        message1.splice(0,0,{role: 'system', content: data});
       })
       .catch(error => {
         console.error('請求檔案失敗:', error);
