@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>密室</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div id="chat-container">
+    <div id="sidebar">
+      <button class="chat-room" onclick="switchChatRoom(event)" data-room="room1">聊天室1</button>
+      <button class="chat-room" onclick="switchChatRoom(event)" data-room="room2">聊天室2</button>
+    </div>
+    <div id="chat-area">
+      <ul id="chat-messages"></ul>
+    </div>    
+  </div>
+  <div id="message-input">
+    <input type="text" placeholder="輸入訊息..." id="user-message" />
+    <button onclick="sendMessage()">送出</button>
+  </div>
+  <script src="js/script.js"></script>
+</body>
+</html>
