@@ -44,16 +44,11 @@ app.post("/api/send-message/:filename", (req, res) => {
       console.log('資料已成功存入檔案:', filename);
     }
   });
-  // 在這裡處理接收訊息的邏輯 (你需要使用 bodyParser 或其他方法來解析 POST 資料)
-  // 然後將訊息存儲在後端 (可以使用一個陣列或資料庫來儲存聊天訊息)
-  // 假設我們在後端使用一個 messages 陣列來儲存訊息
-  // messages.push(newMessage);
   res.status(200).send("訊息已接收");
 });
 app.post('/openaimessage', async (req, res) => {
   //console.log(req.body);
   const param1 = req.body; // 取得第一個參數
-  // 在這裡調用您的函式，並得到結果
   const result = await openai.openAiMessage(param1, 'gpt-3.5-turbo');
   console.log(result);
   // 將結果回傳給網頁端
