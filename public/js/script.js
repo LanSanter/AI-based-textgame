@@ -75,7 +75,7 @@ async function fetchLogFile() {
       if(line === ''){return;}
       const [role, content] = line.split('/');
       roles.push(role);
-      contents.push(content.replace('/n', ''));
+      contents.push(content.replace('@', ''));
     });
 
     for (let i = 0; i < roles.length; i++) {
