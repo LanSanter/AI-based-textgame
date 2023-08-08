@@ -44,7 +44,7 @@ app.post("/api/send-message/:filename", (req, res) => {
   const text = req.body
   .filter(({ role }) => role !== 'system') // 過濾role為'system'的內容
   .map(({ role, content }) => `${role}/${content}`)
-  .join('\n');
+  .join('@\n');
   const filePath = path.join(__dirname, 'setting', filename);
   fs.writeFile(filePath, text, 'utf8', (err) => {
     if (err) {
