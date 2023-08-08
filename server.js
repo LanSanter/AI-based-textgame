@@ -49,6 +49,7 @@ app.post("/api/send-message/:filename", (req, res) => {
 app.post('/openaimessage', async (req, res) => {
   //console.log(req.body);
   const param1 = req.body; // 取得第一個參數
+  while (param1.length > 20 || count_lens(messages) > 3500) {param1.splice(1,1}; // 如果超過二十條訊息，刪除最舊的一條
   const result = await openai.openAiMessage(param1, 'gpt-3.5-turbo');
   console.log(result);
   // 將結果回傳給網頁端
