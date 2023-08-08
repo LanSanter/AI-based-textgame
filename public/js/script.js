@@ -10,13 +10,11 @@ function switchChatRoom(event) {
     console.log(`切換至聊天室 ${room}`);
   }, 1000);//延遲
   // 切換 active class
-  load_setting(room);
+  load_setting();
+  updateChatArea();
   const chatRooms = document.querySelectorAll(".chat-room");
   chatRooms.forEach((room) => room.classList.remove("active"));
-  event.target.classList.add("active");
-
-  // 更新畫面
-  updateChatArea();
+  event.target.classList.add("active");  
 }
 
 async function sendMessage() {
@@ -25,7 +23,7 @@ async function sendMessage() {
   input.value = "";
 
   if (message !== "") {
-    // 送出訊息到系統的接口 (你需要使用 JavaScript 來處理此部分)
+    // 送出訊息到系統的接口
     message1.push({role: 'user', content: message,});
     generate_respone();
     updateChatArea();//refresh
@@ -33,7 +31,7 @@ async function sendMessage() {
 }
 
 function updateChatArea() {
-  // 更新聊天室內容 (你需要使用 JavaScript 來處理此部分)
+  // 更新聊天室內容 
   const chatMessages = document.getElementById("chat-messages");
   chatMessages.innerHTML = ""; // 先清空畫面，然後重新載入新的聊天訊息
   const messagesForActiveRoom = message1.filter((msg) => msg.role === 'assistant' || msg.role === 'user');
@@ -46,49 +44,60 @@ function updateChatArea() {
   });
 }
 
-function load_setting() {
-  fetch(`/get-file/${activeRoom}.txt`)
-      .then(response => response.text())
-      .then(data => {
-        // 將新設定輸入變數中
-        while(message1.length > 0){message1.shift();}
-        updateChatArea();
-        message1.splice(0,0,{role: 'system', content: data});
-      })
-      .catch(error => {
-        console.error('請求檔案失敗:', error);
-      });
-  fetch(`/get-file/${activeRoom}log.txt`)
-      .then(response => response.text())
-      .then(data => {
-        // 將對話紀錄輸入變數中
-        const lines = data.split('\n');
-        const roles=[]; const contents = [];
-        lines.forEach(line => {
-          const [role, content] = line.split('/');
-          roles.push(role); contents.push(content);
-        })
-        for(let i = 0;i < roles.length; i++) {
-          message1.push({role: roles[i], content: contents[i]});
-        }
-        updateChatArea();
-      })
-      .catch(error => {
-        console.error('請求檔案失敗:', error);
-      });
+async function load_setting() {
+  await fetchSettingFile();
+  await fetchLogFile();
 }
+async function fetchSettingFile() {
+  try {
+    const response = await fetch(`/get-file/${activeRoom}.txt`);
+    const data = await response.text();
+    
+    // 將新設定輸入變數中
+    while (message1.length > 0) {
+      message1.shift();
+    }
+    message1.splice(0, 0, { role: 'system', content: data });
+  } catch (error) {
+    console.error('請求檔案失敗:', error);
+  }
+}
+async function fetchLogFile() {
+  try {
+    const response = await fetch(`/get-file/${activeRoom}log.txt`);
+    const data = await response.text();
+    
+    // 將對話紀錄輸入變數中
+    const lines = data.split('\n');
+    const roles = [];
+    const contents = [];
+    lines.forEach(line => {
+      const [role, content] = line.split('/');
+      roles.push(role);
+      contents.push(content);
+    });
+
+    for (let i = 0; i < roles.length; i++) {
+      message1.push({ role: roles[i], content: contents[i] });
+    }
+
+    updateChatArea();
+  } catch (error) {
+    console.error('請求檔案失敗:', error);
+  }
+}
+
 
 function save_log(){
   fetch(`/api/send-message/${activeRoom}log.txt`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json' // 假設傳送的資料是 JSON 格式
+      'Content-Type': 'application/json' 
     },
     body: JSON.stringify(message1) // 將訊息轉換為 JSON 格式傳送
   })
     .then(response => response.text())
     .then(data => {
-      // 在這裡處理伺服器端回傳的資料
       console.log(data);
     })
     .catch(error => {
@@ -127,6 +136,6 @@ document.addEventListener("DOMContentLoaded", () => {
   messageInput.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {sendMessage();}
   });
-  load_setting(activeRoom);
+  load_setting();
   updateChatArea();
 });
