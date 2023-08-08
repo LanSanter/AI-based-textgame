@@ -68,14 +68,14 @@ async function fetchLogFile() {
     const data = await response.text();
     
     // 將對話紀錄輸入變數中
-    const lines = data.split('@');
+    const lines = data.split('@\n');
     const roles = [];
     const contents = [];
     lines.forEach(line => {
       if(line === ''){return;}
       const [role, content] = line.split('/');
       roles.push(role);
-      contents.push(content.replace('@', ''));
+      contents.push(content.replace(/@\n/g, ''));
     });
 
     for (let i = 0; i < roles.length; i++) {
