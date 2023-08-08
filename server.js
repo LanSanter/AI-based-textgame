@@ -53,7 +53,7 @@ app.post('/openaimessage', async (req, res) => {
   const result = await openai.openAiMessage(param1, 'gpt-3.5-turbo');
   console.log(result);
   // 將結果回傳給網頁端
-  res.json({ result });
+  res.json({ result + '@' });
 });
 
 app.listen(port, () => {
