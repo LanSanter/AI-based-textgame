@@ -72,6 +72,7 @@ async function fetchLogFile() {
     const roles = [];
     const contents = [];
     lines.forEach(line => {
+      if(line === ''){return;}
       const [role, content] = line.split('/');
       roles.push(role);
       contents.push(content);
