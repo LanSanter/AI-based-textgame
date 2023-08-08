@@ -52,6 +52,7 @@ function load_setting() {
       .then(data => {
         // 將新設定輸入變數中
         while(message1.length > 0){message1.shift();}
+        updateChatArea();
         message1.splice(0,0,{role: 'system', content: data});
       })
       .catch(error => {
